@@ -1,5 +1,15 @@
 const Article = require('./article.model');
 
+async function getAllArticles() {
+  try {
+    const articles = await Article.find();
+    return articles;
+  } catch (error) {
+    console.log('error', error);
+    throw error;
+  }
+}
+
 async function createArticle(article) {
   try {
     const newArticle = new Article(article);
@@ -32,4 +42,5 @@ module.exports = {
   createArticle,
   updateArticle,
   getArticleById,
+  getAllArticles,
 };

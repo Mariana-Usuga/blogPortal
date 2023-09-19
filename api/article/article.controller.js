@@ -1,4 +1,18 @@
-const { createArticle } = require('./article.service');
+const { createArticle, getAllArticles } = require('./article.service');
+
+async function getAllArticlesHandler(req, res) {
+  try {
+    const articles = await getAllArticles();
+
+    if (articles.length == 0) {
+      return res.status(404).json({ message: `no markets found` });
+    }
+
+    return res.status(200).json(articles);
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+}
 
 async function createArticleHandler(req, res) {
   const { title } = req.body;
@@ -24,4 +38,5 @@ async function createArticleHandler(req, res) {
 
 module.exports = {
   createArticleHandler,
+  getAllArticlesHandler,
 };
