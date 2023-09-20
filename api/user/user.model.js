@@ -38,9 +38,7 @@ const UserSchema = new Schema({
   phone: String,
   cell: String,
   picture: {
-    large: String,
-    medium: String,
-    thumbnail: String,
+    type: String,
   },
   articles: [
     {

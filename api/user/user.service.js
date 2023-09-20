@@ -36,9 +36,20 @@ async function findOneUser(query) {
   return user;
 }
 
+async function updateUser(id, user) {
+  try {
+    const updatedUser = await User.findByIdAndUpdate(id, user, { new: true });
+    //console.log('up ', updateUser);
+    return updatedUser;
+  } catch (error) {
+    throw error;
+  }
+}
+
 module.exports = {
   createUser,
   ValidateUserEmail,
   findOneUser,
   getUserByName,
+  updateUser,
 };

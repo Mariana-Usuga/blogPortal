@@ -2,7 +2,16 @@ const Article = require('./article.model');
 
 async function getAllArticles() {
   try {
-    const articles = await Article.find();
+    const articles = await Article.find()
+      .populate({
+        path: 'comments',
+        populate: {
+          path: 'authorId',
+          model: 'User',
+          select: 'name',
+        },
+      })
+      .populate('authorId');
     return articles;
   } catch (error) {
     console.log('error', error);
@@ -22,7 +31,16 @@ async function createArticle(article) {
 
 async function getArticleById(id) {
   try {
-    const article = await Article.findById(id);
+    const article = await Article.findById(id)
+      .populate({
+        path: 'comments',
+        populate: {
+          path: 'authorId',
+          model: 'User',
+          select: 'name',
+        },
+      })
+      .populate('authorId');
     return article;
   } catch (error) {
     throw error;

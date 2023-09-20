@@ -1,4 +1,4 @@
-const { createUser } = require('./user.service');
+const { createUser, updateUser } = require('./user.service');
 
 async function createUserHandler(req, res) {
   try {
@@ -30,7 +30,22 @@ async function getUserMeHandler(req, res) {
   }
 }
 
+async function updateUserHandler(req, res) {
+  const { id } = req.params;
+  try {
+    const user = await updateUser(id, req.body);
+    if (!user) {
+      return res.status(404).json({ message: `user not found with id: ${id}` });
+    }
+
+    return res.status(200).json(user);
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+}
+
 module.exports = {
   createUserHandler,
   getUserMeHandler,
+  updateUserHandler,
 };

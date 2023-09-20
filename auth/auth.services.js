@@ -17,8 +17,9 @@ function isAuthenticated() {
       if (authHeader) {
         const [, token] = authHeader.split(' ');
         //validamos el token
+        console.log('token', token);
         const payload = await validateToken(token);
-
+        console.log('paylod ', payload);
         if (!payload) {
           console.log('token no valido');
           return res
@@ -57,6 +58,7 @@ function isAuthenticated() {
 async function validateToken(token) {
   try {
     const payload = await jsonwebtoken.verify(token, config.secrets.session);
+    console.log('pa ', payload);
     return payload;
   } catch (error) {
     return null;

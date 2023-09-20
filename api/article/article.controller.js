@@ -1,4 +1,8 @@
-const { createArticle, getAllArticles } = require('./article.service');
+const {
+  createArticle,
+  getAllArticles,
+  getArticleById,
+} = require('./article.service');
 
 async function getAllArticlesHandler(req, res) {
   try {
@@ -36,7 +40,24 @@ async function createArticleHandler(req, res) {
   }
 }
 
+async function getArticleByIdHandler(req, res) {
+  const { id } = req.params;
+  try {
+    const article = await getArticleById(id);
+    if (!article) {
+      return res
+        .status(404)
+        .json({ message: `product not found with id: ${id}` });
+    }
+
+    return res.status(200).json(article);
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+}
+
 module.exports = {
   createArticleHandler,
   getAllArticlesHandler,
+  getArticleByIdHandler,
 };
