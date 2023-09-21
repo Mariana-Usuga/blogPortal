@@ -1,6 +1,6 @@
 const jsonwebtoken = require('jsonwebtoken');
 const compose = require('composable-middleware');
-const { getUserByName } = require('../api/user/user.service');
+const { getUserById } = require('../api/user/user.service');
 const { config } = require('../config');
 
 function signToken(payload) {
@@ -12,11 +12,9 @@ function signToken(payload) {
 function isAuthenticated() {
   return compose().use(async (req, res, next) => {
     try {
-      //obtenemos el token de autorizacion
       const authHeader = req.headers.authorization;
       if (authHeader) {
         const [, token] = authHeader.split(' ');
-        //validamos el token
         console.log('token', token);
         const payload = await validateToken(token);
         console.log('paylod ', payload);
@@ -29,7 +27,7 @@ function isAuthenticated() {
             })
             .end();
         }
-        const user = await getUserByName(payload.name);
+        const user = await getUserById(payload._id);
         if (!user) {
           console.log('entra en no user', user);
           return res
@@ -39,6 +37,7 @@ function isAuthenticated() {
             })
             .end();
         }
+        console.log('payload ', payload);
         req.user = user;
         next();
         return null;

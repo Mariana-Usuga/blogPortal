@@ -1,4 +1,5 @@
 const { createUser, updateUser } = require('./user.service');
+const bcrypt = require('bcrypt');
 
 async function createUserHandler(req, res) {
   try {
@@ -44,8 +45,29 @@ async function updateUserHandler(req, res) {
   }
 }
 
+async function updatePasswordHandler(req, res) {
+  const { id } = req.params;
+  const { password } = req.body;
+  try {
+    const salt = await bcrypt.genSalt(10);
+    const hash = await bcrypt.hash(password, salt);
+    console.log('hash ', hash);
+
+    const user = await updateUser(id, { password: hash });
+    console.log('user ', user);
+    if (!user) {
+      return res.status(404).json({ message: `user not found with id: ${id}` });
+    }
+
+    return res.status(200).json(user);
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+}
+
 module.exports = {
   createUserHandler,
   getUserMeHandler,
   updateUserHandler,
+  updatePasswordHandler,
 };

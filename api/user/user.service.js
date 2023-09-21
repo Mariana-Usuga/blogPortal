@@ -31,6 +31,15 @@ async function getUserByName(name) {
   }
 }
 
+async function getUserById(_id) {
+  try {
+    const user = await User.findOne({ _id });
+    return user;
+  } catch (error) {
+    throw error;
+  }
+}
+
 async function findOneUser(query) {
   const user = await User.findOne(query);
   return user;
@@ -38,7 +47,11 @@ async function findOneUser(query) {
 
 async function updateUser(id, user) {
   try {
-    const updatedUser = await User.findByIdAndUpdate(id, user, { new: true });
+    const updatedUser = await User.findByIdAndUpdate(id, user, {
+      new: true,
+      runValidators: true,
+      context: 'query',
+    });
     //console.log('up ', updateUser);
     return updatedUser;
   } catch (error) {
@@ -52,4 +65,5 @@ module.exports = {
   findOneUser,
   getUserByName,
   updateUser,
+  getUserById,
 };

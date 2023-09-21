@@ -3,10 +3,37 @@ const { signToken } = require('../auth.services');
 
 async function loginUSerHandler(req, res) {
   const { email, password } = req.body;
-  console.log('entra en login');
+  console.log('entra en login', password);
   try {
     /* buscamos el usuario y si no encontramos nos retornara un mensaje de usuario no encontrado */
     const user = await findOneUser({ email });
+    console.log('u', user);
+    if (!user) {
+      return res.status(400).json({
+        message: 'User not found',
+      });
+    }
+    const isMatch = await user.comparePassword(password);
+    console.log('is', isMatch);
+    if (!isMatch) {
+      return res.status(400).json({
+        message: 'Invalid password',
+      });
+    }
+    //creamos el token
+    console.log('USER PROFILE ', user.profile);
+    const token = signToken(user.profile);
+    res.status(200).json({ JWT: token });
+  } catch (error) {
+    res.status(500).json({ error: error });
+  }
+}
+
+async function verifyPasswordHandler(req, res) {
+  const { name, password } = req.body;
+  console.log('re ', req.body);
+  try {
+    const user = await findOneUser({ name });
     if (!user) {
       return res.status(400).json({
         message: 'User not found',
@@ -18,10 +45,7 @@ async function loginUSerHandler(req, res) {
         message: 'Invalid password',
       });
     }
-    //creamos el token
-    console.log('USER PROFILE ', user.profile);
-    const token = signToken(user.profile);
-    res.status(200).json({ JWT: token });
+    res.status(200).json({ success: true });
   } catch (error) {
     res.status(500).json({ error: error });
   }
@@ -60,4 +84,5 @@ async function validateEmailHandler(req, res) {
 module.exports = {
   loginUSerHandler,
   validateEmailHandler,
+  verifyPasswordHandler,
 };

@@ -63,6 +63,23 @@ UserSchema.pre('save', async function (next) {
   }
 });
 
+UserSchema.pre('findOneAndUpdate', async function (next) {
+  console.log('entra en pre');
+  const update = this.getUpdate();
+  const passwordField = 'password';
+  console.log();
+  if (update.$set && update.$set[passwordField]) {
+    try {
+      const salt = await bcrypt.genSalt(10);
+      const hash = await bcrypt.hash(update.$set[passwordField], salt);
+      update.$set[passwordField] = hash;
+    } catch (error) {
+      return next(error);
+    }
+  }
+  return next();
+});
+
 UserSchema.methods.comparePassword = async function (candidatePassword) {
   const user = this;
   try {
