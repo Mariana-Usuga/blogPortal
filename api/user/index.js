@@ -13,8 +13,8 @@ const router = Router();
 
 router.post('/', createUserHandler);
 router.get('/me', isAuthenticated(), getUserMeHandler);
-router.patch('/:id', updateUserHandler);
-router.patch('/password/:id', updatePasswordHandler);
+router.put('/:id', updateUserHandler);
+router.put('/password/:id', updatePasswordHandler);
 //router.get('/me', isAuthenticated(), getUserMeHandler);
 
 module.exports = router;
