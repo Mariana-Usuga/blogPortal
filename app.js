@@ -22,6 +22,4 @@ app.listen(PORT, () => {
   console.log(`Server running 🤖 at http://localhost:${PORT}/`);
 });
 
-//exports.app = functions.https.onRequest(app);
-
 module.exports = app;

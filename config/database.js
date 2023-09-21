@@ -1,9 +1,7 @@
 const mongoose = require('mongoose');
 const { config } = require('./index');
 
-//const URI = process.env.DB_URI;
-const URI =
-  'mongodb+srv://mariana:admin@marktcluster.ikcnf.mongodb.net/blogPortal?retryWrites=true&w=majority';
+const URI = process.env.DB_URI;
 async function connectDB() {
   try {
     await mongoose.connect(URI, {
